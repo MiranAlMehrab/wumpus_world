@@ -31,7 +31,6 @@ def print_list(list_name):
                 print()
 
 
-
 def create_all_percept_list(row_size,column_size):
         new_list = [[ {'breeze':0,'stench':0,'wumpus':0,'pit':0,'vsisted':0,'is_safe':0,'glitter':0} for x in range(column_size)] for x in range(row_size)]
 
@@ -49,6 +48,10 @@ breeze_in_cave = create_list(10,10)
 strench_in_cave = create_list(10,10)
 
 all_map_percept_list = create_all_percept_list(10,10)
+
+def getWorld():
+        return all_map_percept_list
+
 
 
 ######Initialize screen of game window ####################
