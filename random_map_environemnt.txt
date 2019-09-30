@@ -1,0 +1,3 @@
+gold_image,48
+gold_image,59
+wumpus_image,75
