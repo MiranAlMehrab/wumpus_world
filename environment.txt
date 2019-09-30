@@ -1,4 +1,4 @@
-pit_image,23
+pit_image,10
 pit_image,46
 pit_image,67
 wumpus_image,23

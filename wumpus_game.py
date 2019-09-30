@@ -19,7 +19,7 @@ pit_image = pygame.image.load('images/pit.jpg')
 breeze_image = pygame.image.load('images/breeze.png')
 stench_image = pygame.image.load('images/stench.jpg')
 agent_previous_position = [1,1]
-interval_time = 1
+interval_time = 15
 
 path_cost_so_far = 0
 
@@ -27,9 +27,13 @@ path_cost_so_far = 0
 def print_list(list_name):
         for i in range(0,len(list_name)):
                 for j in range(0,len(list_name[i])):
-                        print(pit_in_cave[i][j])
+                        print(pit_in_cave[i][j], end=" ")
                 print()
 
+
+
+def create_all_percept_list(row_size,column_size):
+        new_list = [[ {'breeze':0,'stench':0,'wumpus':0,'pit':0,'vsisted':0,'is_safe':0,'glitter':0} for x in range(column_size)] for x in range(row_size)]
 
 
 def create_list(row_size,column_size):
@@ -43,6 +47,9 @@ glitter_in_cave = create_list(10,10)
 agent_in_cave = create_list(10,10)
 breeze_in_cave = create_list(10,10)
 strench_in_cave = create_list(10,10)
+
+all_map_percept_list = create_all_percept_list(10,10)
+
 
 ######Initialize screen of game window ####################
 
@@ -154,11 +161,13 @@ def update_map_insights(element_type,index):
         
         if element_type == agent_image:
                 agent_in_cave[i][j] = 1
+                
         elif element_type == gold_image:
                 glitter_in_cave[i][j] = 1
-        
+                all_map_percept_list[i][j]['glitter'] = 1
         elif element_type == wumpus_image:
                 wumpus_in_cave[i][j] = 1
+                all_map_percept_list[i][j]['wumpus'] = 1
                 adjacent_caves = get_adjacent_caves(i,j)
                 image_add_list = []
                 
@@ -168,6 +177,7 @@ def update_map_insights(element_type,index):
                         
                         print('i,j ::',i,' ',j)
                         strench_in_cave[neighbour_i][neighbour_j] = 1
+                        all_map_percept_list[i][j]['stench'] = 1
                         
                         cave_number = str(neighbour_i)+str(neighbour_j)
                         str_cave_number = str(int(cave_number)+1) #add_image_to_map will decrease the cave number again by 1
@@ -177,6 +187,7 @@ def update_map_insights(element_type,index):
                         
         elif element_type == pit_image:
                 pit_in_cave[i][j] = 1
+                all_map_percept_list[i][j]['pit'] = 1
                 adjacent_caves = get_adjacent_caves(i,j)
                 image_add_list = []
                 
@@ -184,6 +195,8 @@ def update_map_insights(element_type,index):
                         neighbour_i = int(neighbour[0])
                         neighbour_j = int(neighbour[1])
                         breeze_in_cave[neighbour_i][neighbour_j] = 1
+                        all_map_percept_list[i][j]['breeze'] = 1
+
                         cave_number = str(neighbour_i)+str(neighbour_j)
                         str_cave_number = str(int(cave_number)+1) #add_image_to_map will decrease the cave number again by 1
                         image_add_list.append(['breeze_image',str_cave_number]) 
@@ -263,9 +276,9 @@ def update_total_cost():
                 
 def keep_map_alive_and_update():
         
-        random_file_name = "random_map_environemnt.txt"
+        #random_file_name = "random_map_environemnt.txt"
         static_file_name = "environment.txt"
-        get_random_map(random_file_name)
+        #get_random_map(random_file_name)
                 
         while True:
 
@@ -276,7 +289,8 @@ def keep_map_alive_and_update():
                 event_handler()
                 move_agent(list_of_caves[randrange(100)][0],list_of_caves[randrange(100)][1])
                 update_agent_mind(str(randrange(1,100)))
-                        
+                print_list(all_map_percept_list)
+                
                 pygame.display.update()
                 
                 print_list(wumpus_in_cave)
